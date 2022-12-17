@@ -7,16 +7,18 @@ import {
   Section,
   Text,
   Todo,
+  Filter,
 } from 'components';
 import { useSelector } from 'react-redux';
-import { selectTodos } from 'redux/selectors';
+import { selectFilter, selectTodos } from 'redux/selectors';
 
 const App = () => {
   const todos = useSelector(selectTodos);
+  const filter = useSelector(selectFilter);
 
-  // const deleteTodo = id => {
-  //   setTodos(prevTodos => prevTodos.filter(todo => todo.id !== id));
-  // };
+  const filteredTodos = todos.filter(todo =>
+    todo.text.toLowerCase().includes(filter.toLowerCase())
+  );
 
   return (
     <>
@@ -24,6 +26,7 @@ const App = () => {
       <Section>
         <Container>
           <SearchForm />
+          <Filter />
 
           {todos.length === 0 && (
             <Text textAlign="center">There are no any todos ... </Text>
@@ -31,7 +34,7 @@ const App = () => {
 
           <Grid>
             {todos.length > 0 &&
-              todos.map((todo, index) => (
+              filteredTodos.map((todo, index) => (
                 <GridItem key={todo.id}>
                   <Todo id={todo.id} text={todo.text} counter={index + 1} />
                 </GridItem>
